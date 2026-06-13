@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mide's Preorder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pink:#FF3E6C;
+    --pink-deep:#E0245E;
+    --cream:#FFF7EE;
+    --ink:#241B2D;
+    --gold:#FFC93C;
+    --teal:#1FB6A6;
+    --line:#F0E2D6;
+    --card:#FFFFFF;
+    --radius:18px;
+    --shadow: 0 10px 30px -12px rgba(36,27,45,0.18);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Manrope', sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.brand,.tagline,.btn,.tab{
+    font-family:'Baloo 2', sans-serif;
+  }
+  img{display:block;max-width:100%;}
+  button{font-family:inherit;cursor:pointer;border:none;}
+  a{color:inherit;text-decoration:none;}
+
+  /* ===== Top promo bar ===== */
+  .promo-bar{
+    background:var(--ink);
+    color:var(--cream);
+    text-align:center;
+    font-size:0.78rem;
+    font-weight:600;
+    letter-spacing:0.04em;
+    padding:8px 12px;
+    overflow:hidden;
+    white-space:nowrap;
+  }
+  .promo-bar span{
+    display:inline-block;
+    animation: scrollText 18s linear infinite;
+  }
+  @keyframes scrollText{
+    0%{transform:translateX(8%);}
+    100%{transform:translateX(-110%);}
+  }
+
+  /* ===== Header ===== */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(255,247,238,0.92);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .header-inner{
+    max-width:1200px;margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 20px; gap:16px;
+  }
+  .brand{
+    font-size:1.5rem; font-weight:800; color:var(--pink-deep);
+    display:flex; align-items:center; gap:8px;
+    letter-spacing:-0.02em;
+  }
+  .brand .dot{
+    width:10px;height:10px;border-radius:50%;
+    background:var(--gold);
+    display:inline-block;
+  }
+  .header-actions{display:flex; align-items:center; gap:10px;}
+
+  .search-wrap{
+    flex:1; max-width:420px;
+    display:flex; align-items:center;
+    background:#fff; border:1.5px solid var(--line);
+    border-radius:999px; padding:8px 16px; gap:8px;
+  }
+  .search-wrap input{
+    border:none; outline:none; flex:1; font-size:0.92rem; font-family:inherit; background:transparent;
+  }
+  .search-wrap svg{flex-shrink:0; opacity:0.5;}
+
+  .icon-btn{
+    position:relative;
+    background:#fff; border:1.5px solid var(--line);
+    width:42px; height:42px; border-radius:999px;
+    display:flex; align-items:center; justify-content:center;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  .icon-btn:hover{ transform: translateY(-2px); border-color:var(--pink);}
+  .cart-count{
+    position:absolute; top:-6px; right:-6px;
+    background:var(--pink); color:#fff;
+    font-size:0.68rem; font-weight:700;
+    min-width:20px; height:20px; border-radius:999px;
+    display:flex; align-items:center; justify-content:center;
+    padding:0 4px; font-family:'Manrope',sans-serif;
+  }
+
+  /* ===== Category Tabs ===== */
+  .tabs-row{
+    max-width:1200px;margin:0 auto;
+    display:flex; gap:10px; padding:14px 20px 4px;
+    overflow-x:auto; scrollbar-width:none;
+  }
+  .tabs-row::-webkit-scrollbar{display:none;}
+  .tab{
+    flex-shrink:0;
+    background:#fff; border:1.5px solid var(--line);
+    border-radius:999px; padding:9px 18px;
+    font-size:0.88rem; font-weight:600; color:var(--ink);
+    transition: all 0.15s ease;
+    white-space:nowrap;
+  }
+  .tab.active{
+    background:var(--pink); color:#fff; border-color:var(--pink);
+    box-shadow: 0 6px 16px -6px rgba(255,62,108,0.6);
+  }
+  .tab:hover:not(.active){border-color:var(--pink); color:var(--pink-deep);}
+
+  /* ===== Hero ===== */
+  .hero{
+    max-width:1200px; margin:0 auto;
+    padding:28px 20px 8px;
+    display:grid; grid-template-columns: 1.1fr 1fr;
+    gap:24px; align-items:center;
+  }
+  .hero-text .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    background:#fff; border:1.5px dashed var(--pink);
+    color:var(--pink-deep); font-weight:700; font-size:0.78rem;
+    padding:6px 14px; border-radius:999px; margin-bottom:14px;
+    font-family:'Manrope',sans-serif;
+  }
+  .hero-text h1{
+    font-size:clamp(2rem, 5vw, 3.4rem);
+    line-height:1.05;
+    font-weight:800;
+    letter-spacing:-0.02em;
+    margin-bottom:14px;
+  }
+  .hero-text h1 .accent{color:var(--pink-deep);}
+  .hero-text h1 .accent2{color:var(--teal);}
+  .hero-text p{
+    font-size:1.02rem; color:#5d5266; max-width:480px; margin-bottom:20px;
+    line-height:1.6;
+  }
+  .hero-cta{display:flex; gap:12px; flex-wrap:wrap;}
+  .btn{
+    font-weight:700; font-size:0.98rem;
+    padding:14px 28px; border-radius:999px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn-primary{
+    background:var(--pink); color:#fff;
+    box-shadow: 0 10px 24px -8px rgba(255,62,108,0.55);
+  }
+  .btn-primary:hover{transform:translateY(-3px); box-shadow:0 14px 28px -8px rgba(255,62,108,0.65);}
+  .btn-outline{
+    background:#fff; color:var(--ink); border:1.5px solid var(--line);
+  }
+  .btn-outline:hover{border-color:var(--ink); transform:translateY(-3px);}
+
+  .hero-visual{
+    position:relative; aspect-ratio:1/1; max-height:380px;
+  }
+  .hero-blob{
+    position:absolute; inset:0;
+    background: radial-gradient(circle at 30% 30%, var(--gold), var(--pink) 70%);
+    border-radius:42% 58% 65% 35% / 45% 40% 60% 55%;
+    opacity:0.25; animation: blobMove 10s ease-in-out infinite alternate;
+  }
+  @keyframes blobMove{
+    0%{ border-radius:42% 58% 65% 35% / 45% 40% 60% 55%; }
+    100%{ border-radius:60% 40% 35% 65% / 55% 60% 40% 45%; }
+  }
+  .hero-grid{
+    position:absolute; inset:8%;
+    display:grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
+    gap:14px;
+  }
+  .hero-grid img{
+    width:100%; height:100%; object-fit:cover; border-radius:20px;
+    box-shadow: var(--shadow);
+    border:4px solid #fff;
+  }
+  .hero-grid .b{transform: translateY(14px);}
+  .hero-grid .c{transform: translateY(-14px);}
+  .hero-grid .d{transform: translateY(8px);}
+
+  /* ===== Section heading ===== */
+  .section-head{
+    max-width:1200px; margin:40px auto 18px; padding:0 20px;
+    display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+    flex-wrap:wrap;
+  }
+  .section-head h2{
+    font-size:1.6rem; font-weight:800; letter-spacing:-0.01em;
+  }
+  .section-head .sub{color:#8a7f93; font-size:0.9rem; font-weight:500;}
+
+  /* ===== Product grid ===== */
+  .grid{
+    max-width:1200px; margin:0 auto; padding:0 20px 50px;
+    display:grid; grid-template-columns: repeat(auto-fill, minmax(190px,1fr));
+    gap:18px;
+  }
+  .card{
+    background:var(--card); border-radius:var(--radius);
+    overflow:hidden; border:1px solid var(--line);
+    display:flex; flex-direction:column;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    position:relative;
+  }
+  .card:hover{ transform: translateY(-5px); box-shadow:var(--shadow); }
+  .card-img-wrap{
+    position:relative; aspect-ratio:1/1; overflow:hidden; background:#f6ede2;
+  }
+  .card-img-wrap img{
+    width:100%; height:100%; object-fit:cover;
+    transition: transform 0.4s ease;
+  }
+  .card:hover .card-img-wrap img{transform:scale(1.06);}
+  .badge{
+    position:absolute; top:10px; left:10px;
+    background:var(--gold); color:var(--ink);
+    font-size:0.68rem; font-weight:800;
+    padding:4px 10px; border-radius:999px;
+    font-family:'Baloo 2',sans-serif; letter-spacing:0.02em;
+  }
+  .badge.new{background:var(--teal); color:#fff;}
+  .badge.hot{background:var(--pink); color:#fff;}
+
+  .card-body{padding:13px 14px 14px; display:flex; flex-direction:column; gap:8px; flex:1;}
+  .card-body .pname{
+    font-size:0.92rem; font-weight:700; line-height:1.35;
+    min-height:2.6em;
+  }
+  .card-body .pmeta{
+    display:flex; align-items:center; gap:6px;
+    font-size:0.78rem; color:#9c8fa3;
+  }
+  .stars{color:var(--gold); font-size:0.78rem; letter-spacing:1px;}
+
+  .variant-row{
+    display:flex; gap:6px; flex-wrap:wrap; margin-top:2px;
+  }
+  .variant-row .vlabel{
+    font-size:0.7rem; color:#9c8fa3; width:100%; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;
+  }
+  .swatch{
+    width:22px; height:22px; border-radius:50%;
+    border:2px solid var(--line); cursor:pointer;
+    transition: border-color 0.15s ease, transform 0.1s ease;
+    position:relative; flex-shrink:0;
+  }
+  .swatch.selected{border-color:var(--pink-deep); transform:scale(1.12);}
+  .swatch[data-color="white"]{background:#fff;}
+  .swatch[data-color="black"]{background:#241B2D;}
+  .swatch[data-color="pink"]{background:#FF8FB1;}
+  .swatch[data-color="blue"]{background:#5B8DEF;}
+  .swatch[data-color="beige"]{background:#E8D3B5;}
+  .swatch[data-color="green"]{background:#7BC47F;}
+  .swatch[data-color="red"]{background:#E04F4F;}
+  .swatch[data-color="yellow"]{background:#FFD66B;}
+  .swatch[data-color="purple"]{background:#B58BE0;}
+  .swatch[data-color="grey"]{background:#B7B0BD;}
+  .swatch[data-color="brown"]{background:#9C7350;}
+  .swatch[data-color="silver"]{background:#D8DCE0;}
+  .swatch[data-color="gold"]{background:#E8C56B;}
+  .swatch[data-color="orange"]{background:#F4A24B;}
+  .swatch[data-color="multicolor"]{background:linear-gradient(135deg,#FF3E6C,#FFC93C,#1FB6A6,#5B8DEF);}
+
+  .size-pill{
+    border:1.5px solid var(--line); border-radius:8px;
+    padding:4px 9px; font-size:0.74rem; font-weight:700;
+    background:#fff; transition: all 0.12s ease; flex-shrink:0;
+  }
+  .size-pill.selected{ border-color:var(--pink-deep); background:var(--pink); color:#fff; }
+
+  .add-btn{
+    margin-top:auto;
+    background:var(--ink); color:#fff;
+    border-radius:999px; padding:10px; font-weight:700; font-size:0.86rem;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .add-btn:hover{background:var(--pink-deep);}
+  .add-btn.added{background:var(--teal);}
+  .add-btn.added::after{content:" ✓ Added";}
+
+  /* ===== Cart Drawer ===== */
+  .overlay{
+    position:fixed; inset:0; background:rgba(36,27,45,0.45);
+    opacity:0; visibility:hidden; transition: opacity 0.25s ease;
+    z-index:90;
+  }
+  .overlay.show{opacity:1; visibility:visible;}
+
+  .cart-drawer{
+    position:fixed; top:0; right:0; height:100%;
+    width:min(420px, 100%);
+    background:var(--cream);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    z-index:100;
+    display:flex; flex-direction:column;
+    box-shadow: -10px 0 40px rgba(0,0,0,0.15);
+  }
+  .cart-drawer.open{transform:translateX(0);}
+  .cart-head{
+    padding:20px; border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .cart-head h3{font-size:1.3rem; font-weight:800;}
+  .cart-close{
+    background:none; width:36px; height:36px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:1.3rem;
+    border:1.5px solid var(--line);
+  }
+  .cart-close:hover{border-color:var(--pink);}
+  .cart-items{flex:1; overflow-y:auto; padding:14px 20px;}
+  .cart-empty{
+    text-align:center; padding:60px 20px; color:#9c8fa3;
+  }
+  .cart-empty .emoji{font-size:3rem; margin-bottom:10px;}
+  .cart-item{
+    display:flex; gap:12px; padding:12px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .cart-item img{
+    width:64px; height:64px; border-radius:12px; object-fit:cover; flex-shrink:0;
+    background:#f6ede2;
+  }
+  .ci-info{flex:1; min-width:0;}
+  .ci-info .ci-name{font-weight:700; font-size:0.88rem; margin-bottom:2px; line-height:1.3;}
+  .ci-info .ci-variant{font-size:0.76rem; color:#9c8fa3; margin-bottom:6px;}
+  .ci-controls{
+    display:flex; align-items:center; gap:10px;
+  }
+  .qty-btn{
+    width:26px; height:26px; border-radius:50%; border:1.5px solid var(--line);
+    background:#fff; display:flex; align-items:center; justify-content:center; font-weight:700;
+  }
+  .qty-btn:hover{border-color:var(--pink); color:var(--pink-deep);}
+  .qty-val{font-weight:700; font-size:0.9rem; min-width:18px; text-align:center;}
+  .ci-remove{
+    margin-left:auto; background:none; color:#c4385a; font-size:0.78rem; font-weight:700;
+    text-decoration:underline;
+  }
+
+  .cart-footer{
+    padding:18px 20px 22px; border-top:1px solid var(--line);
+    display:flex; flex-direction:column; gap:12px;
+  }
+  .cart-summary-row{
+    display:flex; justify-content:space-between; font-size:0.92rem; font-weight:700; color:#5d5266;
+  }
+  .checkout-btn{
+    background:var(--teal); color:#fff; border-radius:999px;
+    padding:15px; font-weight:800; font-size:1rem;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+  .checkout-btn:hover{transform:translateY(-2px); background:#179688;}
+  .checkout-note{font-size:0.78rem; color:#9c8fa3; text-align:center; line-height:1.5;}
+
+  /* ===== Floating WhatsApp button ===== */
+  .wa-float{
+    position:fixed; bottom:22px; left:22px; z-index:60;
+    background:#25D366; color:#fff; width:58px; height:58px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 10px 26px -8px rgba(37,211,102,0.6);
+    transition: transform 0.2s ease;
+  }
+  .wa-float:hover{transform:scale(1.08) translateY(-2px);}
+
+  /* ===== Toast ===== */
+  .toast{
+    position:fixed; bottom:24px; right:24px; z-index:110;
+    background:var(--ink); color:#fff; padding:14px 22px;
+    border-radius:14px; font-weight:600; font-size:0.92rem;
+    box-shadow: var(--shadow);
+    transform: translateY(120%); opacity:0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    display:flex; align-items:center; gap:8px;
+  }
+  .toast.show{transform:translateY(0); opacity:1;}
+
+  /* ===== Footer ===== */
+  footer{
+    background:var(--ink); color:#cfc6d4; padding:46px 20px 26px; margin-top:30px;
+  }
+  .footer-inner{
+    max-width:1200px; margin:0 auto;
+    display:grid; grid-template-columns: 1.4fr 1fr 1fr; gap:32px;
+  }
+  .footer-inner h4{color:#fff; font-weight:800; font-size:1.1rem; margin-bottom:14px; font-family:'Baloo 2',sans-serif;}
+  .footer-inner p, .footer-inner li{font-size:0.88rem; line-height:1.7;}
+  .footer-inner ul{list-style:none;}
+  .footer-inner a:hover{color:var(--gold);}
+  .footer-brand{font-size:1.4rem; font-weight:800; color:#fff; margin-bottom:10px; font-family:'Baloo 2',sans-serif;}
+  .footer-bottom{
+    max-width:1200px; margin:30px auto 0; padding-top:20px;
+    border-top:1px solid rgba(255,255,255,0.1);
+    font-size:0.8rem; color:#8a7f93; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+  .wa-link{
+    display:inline-flex; align-items:center; gap:8px;
+    background:#25D366; color:#fff; padding:10px 18px; border-radius:999px;
+    font-weight:700; margin-top:6px; font-size:0.88rem;
+  }
+
+  /* ===== Modal: Checkout ===== */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(36,27,45,0.55);
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; visibility:hidden; transition:opacity 0.25s ease;
+    z-index:120; padding:20px;
+  }
+  .modal-overlay.show{opacity:1; visibility:visible;}
+  .modal{
+    background:#fff; border-radius:22px; max-width:440px; width:100%;
+    padding:30px; max-height:88vh; overflow-y:auto;
+    transform: translateY(20px) scale(0.98); transition: transform 0.25s ease;
+  }
+  .modal-overlay.show .modal{transform:translateY(0) scale(1);}
+  .modal h3{font-size:1.4rem; font-weight:800; margin-bottom:6px;}
+  .modal .modal-sub{color:#9c8fa3; font-size:0.88rem; margin-bottom:18px;}
+  .form-row{margin-bottom:14px;}
+  .form-row label{font-size:0.82rem; font-weight:700; display:block; margin-bottom:6px;}
+  .form-row input, .form-row textarea{
+    width:100%; border:1.5px solid var(--line); border-radius:12px;
+    padding:11px 14px; font-family:inherit; font-size:0.92rem; outline:none;
+    transition: border-color 0.15s ease;
+  }
+  .form-row input:focus, .form-row textarea:focus{border-color:var(--pink);}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .modal-actions .btn{flex:1; justify-content:center;}
+  .modal-close{
+    position:absolute; top:18px; right:18px;
+    width:34px; height:34px; border-radius:50%; border:1.5px solid var(--line);
+    background:#fff; display:flex; align-items:center; justify-content:center;
+  }
+  .modal{position:relative;}
+
+  .pay-box{
+    background: linear-gradient(135deg, #FFF1E6, #FFE8D6);
+    border:1.5px dashed var(--pink);
+    border-radius:14px; padding:14px 16px; margin-bottom:18px;
+  }
+  .pay-box-label{
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:0.98rem;
+    color:var(--pink-deep); margin-bottom:8px;
+  }
+  .pay-row{
+    display:flex; align-items:center; gap:8px;
+    font-size:0.88rem; padding:5px 0; color:#5d5266;
+  }
+  .pay-row span{min-width:120px; font-weight:600;}
+  .pay-row strong{font-size:0.92rem; color:var(--ink);}
+  .copy-btn{
+    margin-left:auto; background:var(--ink); color:#fff;
+    font-size:0.7rem; font-weight:700; padding:5px 11px;
+    border-radius:999px; transition: background 0.15s ease;
+  }
+  .copy-btn:hover{background:var(--pink-deep);}
+  .copy-btn.copied{background:var(--teal);}
+  .pay-note{font-size:0.78rem; color:#9c8fa3; margin-top:6px; line-height:1.5;}
+
+  .confirm-row{
+    display:flex; align-items:flex-start; gap:10px;
+    font-size:0.86rem; font-weight:600; color:#5d5266;
+    margin-bottom:6px; cursor:pointer; line-height:1.4;
+  }
+  .confirm-row input{
+    width:18px; height:18px; margin-top:2px; accent-color: var(--pink); flex-shrink:0;
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 860px){
+    .hero{grid-template-columns:1fr; padding-top:18px;}
+    .hero-visual{order:-1; max-height:280px;}
+    .search-wrap{display:none;}
+    .header-inner{justify-content:space-between;}
+  }
+  @media (max-width:480px){
+    .grid{grid-template-columns: repeat(2, 1fr); gap:12px;}
+    .footer-inner{grid-template-columns:1fr; gap:24px;}
+    .hero-text h1{font-size:2rem;}
+  }
+
+  /* Focus visibility for accessibility */
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
+    outline:3px solid var(--teal); outline-offset:2px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="promo-bar">
+  <span>🛍️ Preorder now &amp; skip the wait — message us on WhatsApp to confirm your order &nbsp;•&nbsp; New arrivals added weekly &nbsp;•&nbsp; Quality picks, every category &nbsp;•&nbsp; Preorder now &amp; skip the wait — message us on WhatsApp to confirm your order &nbsp;•&nbsp; New arrivals added weekly</span>
+</div>
+
+<header>
+  <div class="header-inner">
+    <div class="brand"><span class="dot"></span> Mide's Preorder</div>
+    <div class="search-wrap">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Search products...">
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" id="searchToggle" aria-label="Search" title="Search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      </button>
+      <button class="icon-btn" id="cartBtn" aria-label="Open cart" title="Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </div>
+  <div class="tabs-row" id="tabsRow"></div>
+</header>
+
+<section class="hero">
+  <div class="hero-text">
+    <div class="eyebrow">✨ Preorder marketplace</div>
+    <h1>Browse it, <span class="accent">pick it</span>, <span class="accent2">we'll source it.</span></h1>
+    <p>From phone gadgets to home gems — explore handpicked finds across every category, choose your favorite colour or size, add to cart, then send your order straight to us on WhatsApp. Simple, fast, no stress.</p>
+    <div class="hero-cta">
+      <a href="#shop" class="btn btn-primary">Start Browsing</a>
+      <a href="https://wa.me/2348089764592" target="_blank" rel="noopener" class="btn btn-outline">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#25D366"><path d="M17.6 6.32A8.86 8.86 0 0012.05 4a8.94 8.94 0 00-7.74 13.39L3 21l3.71-1.27a8.93 8.93 0 004.34 1.1h.01a8.94 8.94 0 008.93-8.93 8.86 8.86 0 00-2.39-5.58zm-5.55 13.7h-.01a7.4 7.4 0 01-3.78-1.04l-.27-.16-2.81.96.94-2.74-.18-.28a7.42 7.42 0 0111.43-9.4 7.36 7.36 0 012.18 5.24 7.43 7.43 0 01-7.5 7.42zm4.07-5.56c-.22-.11-1.31-.65-1.51-.72-.2-.08-.35-.11-.5.11-.15.22-.57.72-.7.87-.13.15-.26.16-.48.05-.22-.11-.93-.34-1.77-1.09-.65-.58-1.09-1.3-1.22-1.52-.13-.22-.01-.34.11-.45.11-.11.26-.28.39-.42.13-.14.17-.24.26-.4.09-.16.04-.3-.03-.42-.07-.11-.51-1.23-.7-1.68-.18-.44-.37-.38-.51-.39-.13-.01-.29-.01-.44-.01-.16 0-.41.06-.62.29-.22.22-.83.81-.83 1.97 0 1.16.85 2.29.97 2.45.12.16 1.66 2.54 4.03 3.46 2.37.92 2.37.61 2.8.57.43-.04 1.31-.53 1.49-1.04.18-.51.18-.95.13-1.04-.06-.1-.22-.16-.44-.27z"/></svg>
+        Chat on WhatsApp
+      </a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-blob"></div>
+    <div class="hero-grid">
+      <img class="a" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80" alt="Headphones product" onerror="window.handleImgError(this,'https://picsum.photos/seed/hero-headphones/400/400')">
+      <img class="b" src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80" alt="Sneakers product" onerror="window.handleImgError(this,'https://picsum.photos/seed/hero-sneakers/400/400')">
+      <img class="c" src="https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=400&q=80" alt="Smartwatch product" onerror="window.handleImgError(this,'https://picsum.photos/seed/hero-smartwatch/400/400')">
+      <img class="d" src="https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=400&q=80" alt="Handbag product" onerror="window.handleImgError(this,'https://picsum.photos/seed/hero-bag/400/400')">
+    </div>
+  </div>
+</section>
+
+<div id="shop"></div>
+
+<div class="overlay" id="overlay"></div>
+
+<aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart">
+  <div class="cart-head">
+    <h3>Your Cart</h3>
+    <button class="cart-close" id="cartClose" aria-label="Close cart">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer" id="cartFooter">
+    <div class="cart-summary-row"><span>Items in cart</span><span id="cartTotalQty">0</span></div>
+    <button class="checkout-btn" id="checkoutBtn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M17.6 6.32A8.86 8.86 0 0012.05 4a8.94 8.94 0 00-7.74 13.39L3 21l3.71-1.27a8.93 8.93 0 004.34 1.1h.01a8.94 8.94 0 008.93-8.93 8.86 8.86 0 00-2.39-5.58zm-5.55 13.7h-.01a7.4 7.4 0 01-3.78-1.04l-.27-.16-2.81.96.94-2.74-.18-.28a7.42 7.42 0 0111.43-9.4 7.36 7.36 0 012.18 5.24 7.43 7.43 0 01-7.5 7.42zm4.07-5.56c-.22-.11-1.31-.65-1.51-.72-.2-.08-.35-.11-.5.11-.15.22-.57.72-.7.87-.13.15-.26.16-.48.05-.22-.11-.93-.34-1.77-1.09-.65-.58-1.09-1.3-1.22-1.52-.13-.22-.01-.34.11-.45.11-.11.26-.28.39-.42.13-.14.17-.24.26-.4.09-.16.04-.3-.03-.42-.07-.11-.51-1.23-.7-1.68-.18-.44-.37-.38-.51-.39-.13-.01-.29-.01-.44-.01-.16 0-.41.06-.62.29-.22.22-.83.81-.83 1.97 0 1.16.85 2.29.97 2.45.12.16 1.66 2.54 4.03 3.46 2.37.92 2.37.61 2.8.57.43-.04 1.31-.53 1.49-1.04.18-.51.18-.95.13-1.04-.06-.1-.22-.16-.44-.27z"/></svg>
+      Send Order on WhatsApp
+    </button>
+    <p class="checkout-note">You'll see our Opay payment details next. Pay, confirm, and we'll open WhatsApp with your full order to finalize the preorder.</p>
+  </div>
+</aside>
+
+<a class="wa-float" href="https://wa.me/2348089764592" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M17.6 6.32A8.86 8.86 0 0012.05 4a8.94 8.94 0 00-7.74 13.39L3 21l3.71-1.27a8.93 8.93 0 004.34 1.1h.01a8.94 8.94 0 008.93-8.93 8.86 8.86 0 00-2.39-5.58zm-5.55 13.7h-.01a7.4 7.4 0 01-3.78-1.04l-.27-.16-2.81.96.94-2.74-.18-.28a7.42 7.42 0 0111.43-9.4 7.36 7.36 0 012.18 5.24 7.43 7.43 0 01-7.5 7.42zm4.07-5.56c-.22-.11-1.31-.65-1.51-.72-.2-.08-.35-.11-.5.11-.15.22-.57.72-.7.87-.13.15-.26.16-.48.05-.22-.11-.93-.34-1.77-1.09-.65-.58-1.09-1.3-1.22-1.52-.13-.22-.01-.34.11-.45.11-.11.26-.28.39-.42.13-.14.17-.24.26-.4.09-.16.04-.3-.03-.42-.07-.11-.51-1.23-.7-1.68-.18-.44-.37-.38-.51-.39-.13-.01-.29-.01-.44-.01-.16 0-.41.06-.62.29-.22.22-.83.81-.83 1.97 0 1.16.85 2.29.97 2.45.12.16 1.66 2.54 4.03 3.46 2.37.92 2.37.61 2.8.57.43-.04 1.31-.53 1.49-1.04.18-.51.18-.95.13-1.04-.06-.1-.22-.16-.44-.27z"/></svg>
+</a>
+
+<div class="toast" id="toast"></div>
+
+<!-- Checkout details modal -->
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal">
+    <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+    <h3>Almost done! 🎉</h3>
+    <p class="modal-sub">Make payment, then send us your details so we can prepare your preorder.</p>
+
+    <div class="pay-box">
+      <div class="pay-box-label">💳 Pay to this account</div>
+      <div class="pay-row"><span>Bank</span><strong>Opay</strong></div>
+      <div class="pay-row"><span>Account Number</span><strong id="acctNum">08089764592</strong><button class="copy-btn" id="copyAcct" type="button">Copy</button></div>
+      <div class="pay-row"><span>Account Name</span><strong>Jacob Ayomide</strong></div>
+      <p class="pay-note">After paying, fill the form below and tap "Send to WhatsApp" — attach or describe your payment proof in the chat.</p>
+    </div>
+
+    <div class="form-row">
+      <label for="custName">Your Name</label>
+      <input type="text" id="custName" placeholder="e.g. Tunde Adebayo" required>
+    </div>
+    <div class="form-row">
+      <label for="custPhone">Phone Number</label>
+      <input type="tel" id="custPhone" placeholder="e.g. 080XXXXXXXX" required>
+    </div>
+    <div class="form-row">
+      <label for="custAddress">Delivery Address</label>
+      <textarea id="custAddress" rows="2" placeholder="Street, area, city"></textarea>
+    </div>
+    <div class="form-row">
+      <label for="custNote">Note (optional)</label>
+      <textarea id="custNote" rows="2" placeholder="Any extra info for your order"></textarea>
+    </div>
+    <label class="confirm-row">
+      <input type="checkbox" id="paidConfirm">
+      <span>I have made payment to the account above</span>
+    </label>
+    <div class="modal-actions">
+      <button class="btn btn-outline" id="modalCancel">Cancel</button>
+      <button class="btn btn-primary" id="modalSend">Send to WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">Mide's Preorder</div>
+      <p>Your one-stop spot for trending finds — gadgets, fashion, home, beauty &amp; more. Browse, build your cart, and send your preorder straight to us. We handle the rest.</p>
+      <a class="wa-link" href="https://wa.me/2348089764592" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M17.6 6.32A8.86 8.86 0 0012.05 4a8.94 8.94 0 00-7.74 13.39L3 21l3.71-1.27a8.93 8.93 0 004.34 1.1h.01a8.94 8.94 0 008.93-8.93 8.86 8.86 0 00-2.39-5.58zm-5.55 13.7h-.01a7.4 7.4 0 01-3.78-1.04l-.27-.16-2.81.96.94-2.74-.18-.28a7.42 7.42 0 0111.43-9.4 7.36 7.36 0 012.18 5.24 7.43 7.43 0 01-7.5 7.42zm4.07-5.56c-.22-.11-1.31-.65-1.51-.72-.2-.08-.35-.11-.5.11-.15.22-.57.72-.7.87-.13.15-.26.16-.48.05-.22-.11-.93-.34-1.77-1.09-.65-.58-1.09-1.3-1.22-1.52-.13-.22-.01-.34.11-.45.11-.11.26-.28.39-.42.13-.14.17-.24.26-.4.09-.16.04-.3-.03-.42-.07-.11-.51-1.23-.7-1.68-.18-.44-.37-.38-.51-.39-.13-.01-.29-.01-.44-.01-.16 0-.41.06-.62.29-.22.22-.83.81-.83 1.97 0 1.16.85 2.29.97 2.45.12.16 1.66 2.54 4.03 3.46 2.37.92 2.37.61 2.8.57.43-.04 1.31-.53 1.49-1.04.18-.51.18-.95.13-1.04-.06-.1-.22-.16-.44-.27z"/></svg>
+        08089764592
+      </a>
+    </div>
+    <div>
+      <h4>Categories</h4>
+      <ul id="footerCats"></ul>
+    </div>
+    <div>
+      <h4>How it works</h4>
+      <ul>
+        <li>1. Browse products &amp; pick variants</li>
+        <li>2. Add items to your cart</li>
+        <li>3. Pay to our Opay account</li>
+        <li>4. Enter your details &amp; confirm</li>
+        <li>5. Send order via WhatsApp</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Mide's Preorder. All rights reserved.</span>
+    <span>Made for easy preordering 💛</span>
+  </div>
+</footer>
+
+<script>
+/* ============ IMAGE FALLBACK ============ */
+// If any product image fails to load, swap to a reliable placeholder
+// seeded from the product name so it stays consistent on reload.
+function imgWithFallback(src, name){
+  const seed = encodeURIComponent(name.toLowerCase().replace(/[^a-z0-9]+/g,'-'));
+  const fallback = `https://picsum.photos/seed/${seed}/500/500`;
+  return { src, fallback };
+}
+window.handleImgError = function(img, fallbackUrl){
+  if(img.src !== fallbackUrl){
+    img.onerror = null;
+    img.src = fallbackUrl;
+  }
+};
+
+/* ============ PRODUCT DATA ============ */
+const CATEGORIES = ["All","Electronics","Fashion","Home & Kitchen","Beauty","Bags & Accessories","Kids & Toys","Sports & Outdoors","Phone Accessories"];
+
+const COLOR_SETS = {
+  basic: ["white","black","pink","blue","grey"],
+  fashionA: ["black","white","beige","pink","red"],
+  fashionB: ["black","brown","grey","beige"],
+  bright: ["pink","yellow","blue","green","purple"],
+  metallic: ["silver","gold","black","grey"],
+  multi: ["multicolor","white","black"],
+  none: []
+};
+
+const SIZE_SETS = {
+  clothing: ["S","M","L","XL"],
+  shoes: ["38","39","40","41","42","43"],
+  numeric: ["One Size"],
+  none: []
+};
+
+const PRODUCTS = [
+  // Electronics
+  {name:"Wireless Bluetooth Earbuds", cat:"Electronics", img:"https://images.unsplash.com/photo-1590658165737-15a047b8ce5d?w=500&q=80", badge:"Hot", colors:COLOR_SETS.basic, sizes:SIZE_SETS.none, rating:5},
+  {name:"Smart Watch Fitness Tracker", cat:"Electronics", img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&q=80", badge:"New", colors:COLOR_SETS.metallic, sizes:SIZE_SETS.none, rating:4},
+  {name:"Portable Mini Projector", cat:"Electronics", img:"https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=500&q=80", badge:"", colors:COLOR_SETS.basic.slice(0,2), sizes:SIZE_SETS.none, rating:4},
+  {name:"LED Ring Light with Stand", cat:"Electronics", img:"https://images.unsplash.com/photo-1606318313647-9c9d9c97f5b6?w=500&q=80", badge:"", colors:COLOR_SETS.none, sizes:SIZE_SETS.none, rating:4},
+  {name:"Bluetooth Mini Speaker", cat:"Electronics", img:"https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500&q=80", badge:"Hot", colors:COLOR_SETS.bright, sizes:SIZE_SETS.none, rating:5},
+  {name:"Digital Kitchen Scale", cat:"Electronics", img:"https://images.unsplash.com/photo-1622428051717-dcd8412959de?w=500&q=80", badge:"", colors:COLOR_SETS.basic.slice(0,2), sizes:SIZE_SETS.none, rating:4},
+  {name:"Wireless Charging Pad", cat:"Electronics", img:"https://images.unsplash.com/photo-1591290619762-c2f1aa5c5c5b?w=500&q=80", badge:"New", colors:COLOR_SETS.basic.slice(0,2), sizes:SIZE_SETS.none, rating:4},
+  {name:"Mini Handheld Fan", cat:"Electronics", img:"https://images.unsplash.com/photo-1565953554608-3a3a9c5e3b9c?w=500&q=80", badge:"", colors:COLOR_SETS.bright, sizes:SIZE_SETS.none, rating:3},
+
+  // Phone Accessories
+  {name:"Shockproof Phone Case", cat:"Phone Accessories", img:"https://images.unsplash.com/photo-1592286927505-1def25115481?w=500&q=80", badge:"Hot", colors:COLOR_SETS.multi, sizes:SIZE_SETS.none, rating:5},
+  {name:"Tempered Glass Screen Protector", cat:"Phone Accessories", img:"https://images.unsplash.com/photo-1601972599720-36938d4ecd31?w=500&q=80", badge:"", colors:COLOR_SETS.none, sizes:SIZE_SETS.none, rating:4},
+  {name:"Magnetic Car Phone Holder", cat:"Phone Accessories", img:"https://images.unsplash.com/photo-1597239719215-d10797ec33d5?w=500&q=80", badge:"New", colors:COLOR_SETS.basic.slice(0,2), sizes:SIZE_SETS.none, rating:4},
+  {name:"Retractable USB-C Cable", cat:"Phone Accessories", img:"https://images.unsplash.com/photo-1583863788434-e62bd6c4d9d4?w=500&q=80", badge:"", colors:COLOR_SETS.bright, sizes:SIZE_SETS.none, rating:4},
+  {name:"Pop-Up Phone Grip Stand", cat:"Phone Accessories", img:"https://images.unsplash.com/photo-1556656793-08538906a9f8?w=500&q=80", badge:"", colors:COLOR_SETS.multi, sizes:SIZE_SETS.none, rating:3},
+  {name:"Portable Power Bank 10000mAh", cat:"Phone Accessories", img:"https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=500&q=80", badge:"Hot", colors:COLOR_SETS.basic.slice(0,3), sizes:SIZE_SETS.none, rating:5},
+
+  // Fashion
+  {name:"Oversized Cotton Hoodie", cat:"Fashion", img:"https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&q=80", badge:"New", colors:COLOR_SETS.fashionA, sizes:SIZE_SETS.clothing, rating:5},
+  {name:"High-Waist Denim Jeans", cat:"Fashion", img:"https://images.unsplash.com/photo-1542272604-787c3835535d?w=500&q=80", badge:"", colors:COLOR_SETS.fashionB, sizes:SIZE_SETS.clothing, rating:4},
+  {name:"Floral Summer Dress", cat:"Fashion", img:"https://images.unsplash.com/photo-1568252542512-9fe8fe9c87bb?w=500&q=80", badge:"Hot", colors:COLOR_SETS.fashionA, sizes:SIZE_SETS.clothing, rating:5},
+  {name:"Men's Graphic T-Shirt", cat:"Fashion", img:"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&q=80", badge:"", colors:COLOR_SETS.basic, sizes:SIZE_SETS.clothing, rating:4},
+  {name:"Knit Cardigan Sweater", cat:"Fashion", img:"https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=500&q=80", badge:"", colors:COLOR_SETS.fashionB, sizes:SIZE_SETS.clothing, rating:4},
+  {name:"Sports Leggings", cat:"Fashion", img:"https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=500&q=80", badge:"New", colors:COLOR_SETS.bright, sizes:SIZE_SETS.clothing, rating:5},
+  {name:"Chunky Sneakers", cat:"Fashion", img:"https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=500&q=80", badge:"Hot", colors:COLOR_SETS.fashionA, sizes:SIZE_SETS.shoes, rating:5},
+  {name:"Classic Canvas Sneakers", cat:"Fashion", img:"https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=500&q=80", badge:"", colors:COLOR_SETS.basic, sizes:SIZE_SETS.shoes, rating:4},
+
+  // Home & Kitchen
+  {name:"Ceramic Mug Set (4pcs)", cat:"Home & Kitchen", img:"https://images.unsplash.com/photo-1577937927133-66ef06acdf18?w=500&q=80", badge:"", colors:COLOR_SETS.bright, sizes:SIZE_SETS.none, rating:4},
+  {name:"Non-Stick Frying Pan", cat:"Home & Kitchen", img:"https://images.unsplash.com/photo-1584990347449-a8a3a91dfe09?w=500&q=80", badge:"New", colors:COLOR_SETS.none, sizes:SIZE_SETS.none, rating:5},
+  {name:"LED Strip Lights (5m)", cat:"Home & Kitchen", img:"https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?w=500&q=80", badge:"Hot", colors:COLOR_SETS.none, sizes:SIZE_SETS.none, rating:5},
+  {name:"Storage Organizer Boxes (Set)", cat:"Home & Kitchen", img:"https://images.unsplash.com/photo-1591129841117-3adfd313e34f?w=500&q=80", badge:"", colors:COLOR_SETS.basic.slice(0,3), sizes:SIZE_SETS.none, rating:4},
+  {name:"Decorative Throw Pillow Covers", cat:"Home & Kitchen", img:"https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=500&q=80", badge:"", colors:COLOR_SETS.fashionA, sizes:SIZE_SETS.none, rating:4},
+  {name:"Electric Hand Mixer", cat:"Home & Kitchen", img:"https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=500&q=80", badge:"", colors:COLOR_SETS.basic.slice(0,2), sizes:SIZE_SETS.none, rating:4},
+  {name:"Reusable Silicone Food Bags", cat:"Home & Kitchen", img:"https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=500&q=80", badge:"New", colors:COLOR_SETS.bright, sizes:SIZE_SETS.none, rating:4},
+  {name:"Aromatherapy Diffuser", cat:"Home & Kitchen", img:"https://images.unsplash.com/photo-1607006344380-b6775a0824a7?w=500&q=80", badge:"Hot", colors:COLOR_SETS.basic.slice(0,2), sizes:SIZE_SETS.none, rating:5},
+
+  // Beauty
+  {name:"Skincare Gift Set", cat:"Beauty", img:"https://images.unsplash.com/photo-1556228720-da4002f1e8a3?w=500&q=80", badge:"Hot", colors:COLOR_SETS.none, sizes:SIZE_SETS.none, rating:5},
+  {name:"Makeup Brush Set (12pcs)", cat:"Beauty", img:"https://images.unsplash.com/photo-1631730486572-226d1f595b68?w=500&q=80", badge:"New", colors:COLOR_SETS.fashionA, sizes:SIZE_SETS.none, rating:5},
+  {name:"LED Vanity Mirror", cat:"Beauty", img:"https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&q=80", badge:"", colors:COLOR_SETS.metallic, sizes:SIZE_SETS.none, rating:4},
+  {name:"Hair Straightener Brush", cat:"Beauty", img:"https://images.unsplash.com/photo-1522338242992-e1a54906a8da?w=500&q=80", badge:"", colors:COLOR_SETS.basic.slice(0,2), sizes:SIZE_SETS.none, rating:4},
+  {name:"Electric Nail File Kit", cat:"Beauty", img:"https://images.unsplash.com/photo-1610992015734-5944c3a5d31a?w=500&q=80", badge:"", colors:COLOR_SETS.bright, sizes:SIZE_SETS.none, rating:3},
+  {name:"Jade Facial Roller Set", cat:"Beauty", img:"https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=500&q=80", badge:"New", colors:COLOR_SETS.none, sizes:SIZE_SETS.none, rating:4},
+
+  // Bags & Accessories
+  {name:"Quilted Crossbody Bag", cat:"Bags & Accessories", img:"https://images.unsplash.com/photo-1591561954557-26941169b49e?w=500&q=80", badge:"Hot", colors:COLOR_SETS.fashionA, sizes:SIZE_SETS.none, rating:5},
+  {name:"Canvas Tote Bag", cat:"Bags & Accessories", img:"https://images.unsplash.com/photo-1591561954557-26941169b49e?w=500&q=80", badge:"", colors:COLOR_SETS.basic.slice(0,3), sizes:SIZE_SETS.none, rating:4},
+  {name:"Mini Backpack", cat:"Bags & Accessories", img:"https://images.unsplash.com/photo-1547949003-9792a18a2601?w=500&q=80", badge:"New", colors:COLOR_SETS.fashionB, sizes:SIZE_SETS.none, rating:4},
+  {name:"Statement Hoop Earrings", cat:"Bags & Accessories", img:"https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500&q=80", badge:"", colors:COLOR_SETS.metallic, sizes:SIZE_SETS.none, rating:4},
+  {name:"Layered Necklace Set", cat:"Bags & Accessories", img:"https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=500&q=80", badge:"Hot", colors:COLOR_SETS.metallic, sizes:SIZE_SETS.none, rating:5},
+  {name:"Classic Sunglasses", cat:"Bags & Accessories", img:"https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&q=80", badge:"", colors:COLOR_SETS.fashionA, sizes:SIZE_SETS.none, rating:4},
+
+  // Kids & Toys
+  {name:"Building Blocks Set (200pcs)", cat:"Kids & Toys", img:"https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=500&q=80", badge:"New", colors:COLOR_SETS.none, sizes:SIZE_SETS.none, rating:5},
+  {name:"Remote Control Mini Car", cat:"Kids & Toys", img:"https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=500&q=80", badge:"Hot", colors:COLOR_SETS.bright, sizes:SIZE_SETS.none, rating:5},
+  {name:"Plush Teddy Bear", cat:"Kids & Toys", img:"https://images.unsplash.com/photo-1559454403-b8fb88521f56?w=500&q=80", badge:"", colors:COLOR_SETS.fashionB, sizes:SIZE_SETS.none, rating:4},
+  {name:"Educational Puzzle Set", cat:"Kids & Toys", img:"https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=500&q=80", badge:"", colors:COLOR_SETS.none, sizes:SIZE_SETS.none, rating:4},
+  {name:"Kids Water Bottle with Straw", cat:"Kids & Toys", img:"https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=500&q=80", badge:"New", colors:COLOR_SETS.bright, sizes:SIZE_SETS.none, rating:4},
+
+  // Sports & Outdoors
+  {name:"Adjustable Yoga Mat", cat:"Sports & Outdoors", img:"https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=500&q=80", badge:"", colors:COLOR_SETS.bright, sizes:SIZE_SETS.none, rating:4},
+  {name:"Resistance Bands Set", cat:"Sports & Outdoors", img:"https://images.unsplash.com/photo-1517344884509-a0c97ec11bcc?w=500&q=80", badge:"Hot", colors:COLOR_SETS.bright, sizes:SIZE_SETS.none, rating:5},
+  {name:"Insulated Sports Water Bottle", cat:"Sports & Outdoors", img:"https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=500&q=80", badge:"New", colors:COLOR_SETS.metallic, sizes:SIZE_SETS.none, rating:4},
+  {name:"Foldable Camping Chair", cat:"Sports & Outdoors", img:"https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=500&q=80", badge:"", colors:COLOR_SETS.basic.slice(0,3), sizes:SIZE_SETS.none, rating:4},
+  {name:"Travel Duffel Bag", cat:"Sports & Outdoors", img:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&q=80", badge:"", colors:COLOR_SETS.fashionB, sizes:SIZE_SETS.none, rating:4},
+];
+
+// Assign unique ids
+PRODUCTS.forEach((p,i)=> p.id = "p"+i);
+
+/* ============ STATE ============ */
+let cart = {}; // key: id|color|size -> {product, color, size, qty}
+let activeCategory = "All";
+let searchTerm = "";
+
+/* ============ RENDER TABS ============ */
+const tabsRow = document.getElementById('tabsRow');
+const footerCats = document.getElementById('footerCats');
+CATEGORIES.forEach(cat=>{
+  const btn = document.createElement('button');
+  btn.className = 'tab' + (cat==='All' ? ' active' : '');
+  btn.textContent = cat;
+  btn.onclick = ()=>{
+    activeCategory = cat;
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    renderGrid();
+  };
+  tabsRow.appendChild(btn);
+
+  if(cat !== 'All'){
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = '#shop';
+    a.textContent = cat;
+    a.onclick = (e)=>{
+      e.preventDefault();
+      activeCategory = cat;
+      document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.textContent===cat));
+      renderGrid();
+      document.getElementById('shop').scrollIntoView({behavior:'smooth'});
+    };
+    li.appendChild(a);
+    footerCats.appendChild(li);
+  }
+});
+
+/* ============ RENDER PRODUCT GRID ============ */
+const shopSection = document.getElementById('shop');
+
+function ratingStars(r){
+  return '★'.repeat(r) + '☆'.repeat(5-r);
+}
+
+function renderGrid(){
+  shopSection.innerHTML = '';
+
+  const head = document.createElement('div');
+  head.className = 'section-head';
+  head.innerHTML = `<h2>${activeCategory === 'All' ? 'All Products' : activeCategory}</h2><span class="sub">Pick a colour or size, then add to cart</span>`;
+  shopSection.appendChild(head);
+
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+
+  const filtered = PRODUCTS.filter(p=>{
+    const matchCat = activeCategory === 'All' || p.cat === activeCategory;
+    const matchSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchCat && matchSearch;
+  });
+
+  if(filtered.length === 0){
+    grid.innerHTML = `<div class="cart-empty" style="grid-column:1/-1;"><div class="emoji">🔍</div><p>No products found. Try another search or category.</p></div>`;
+  }
+
+  filtered.forEach(p=>{
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    let badgeHTML = '';
+    if(p.badge === 'Hot') badgeHTML = `<span class="badge hot">🔥 Hot</span>`;
+    else if(p.badge === 'New') badgeHTML = `<span class="badge new">✦ New</span>`;
+
+    let colorHTML = '';
+    if(p.colors.length){
+      colorHTML = `<div class="variant-row"><span class="vlabel">Colour</span>` +
+        p.colors.map((c,i)=>`<div class="swatch ${i===0?'selected':''}" data-color="${c}" data-type="color" data-value="${c}" title="${c}"></div>`).join('') +
+        `</div>`;
+    }
+
+    let sizeHTML = '';
+    if(p.sizes.length && p.sizes[0] !== 'One Size'){
+      sizeHTML = `<div class="variant-row"><span class="vlabel">Size</span>` +
+        p.sizes.map((s,i)=>`<div class="size-pill ${i===0?'selected':''}" data-type="size" data-value="${s}">${s}</div>`).join('') +
+        `</div>`;
+    }
+
+    card.innerHTML = `
+      <div class="card-img-wrap">
+        ${badgeHTML}
+        <img src="${p.img}" alt="${p.name}" loading="lazy" onerror="window.handleImgError(this, 'https://picsum.photos/seed/${encodeURIComponent(p.name.toLowerCase().replace(/[^a-z0-9]+/g,'-'))}/500/500')">
+      </div>
+      <div class="card-body">
+        <div class="pname">${p.name}</div>
+        <div class="pmeta"><span class="stars">${ratingStars(p.rating)}</span><span>${p.cat}</span></div>
+        ${colorHTML}
+        ${sizeHTML}
+        <button class="add-btn" data-id="${p.id}">Add to Cart</button>
+      </div>
+    `;
+
+    // swatch selection
+    card.querySelectorAll('.swatch').forEach(sw=>{
+      sw.onclick = ()=>{
+        card.querySelectorAll('.swatch').forEach(s=>s.classList.remove('selected'));
+        sw.classList.add('selected');
+      };
+    });
+    // size selection
+    card.querySelectorAll('.size-pill').forEach(sp=>{
+      sp.onclick = ()=>{
+        card.querySelectorAll('.size-pill').forEach(s=>s.classList.remove('selected'));
+        sp.classList.add('selected');
+      };
+    });
+
+    // add to cart
+    const addBtn = card.querySelector('.add-btn');
+    addBtn.onclick = ()=>{
+      const selectedColor = card.querySelector('.swatch.selected');
+      const selectedSize = card.querySelector('.size-pill.selected');
+      const color = selectedColor ? selectedColor.dataset.value : null;
+      const size = selectedSize ? selectedSize.dataset.value : null;
+      addToCart(p, color, size);
+
+      addBtn.classList.add('added');
+      addBtn.textContent = '';
+      setTimeout(()=>{
+        addBtn.classList.remove('added');
+        addBtn.textContent = 'Add to Cart';
+      }, 1100);
+
+      showToast(`${p.name} added to cart`);
+    };
+
+    grid.appendChild(card);
+  });
+
+  shopSection.appendChild(grid);
+}
+
+/* ============ CART LOGIC ============ */
+function addToCart(product, color, size){
+  const key = `${product.id}|${color||''}|${size||''}`;
+  if(cart[key]){
+    cart[key].qty += 1;
+  } else {
+    cart[key] = { product, color, size, qty: 1 };
+  }
+  renderCart();
+}
+
+function removeFromCart(key){
+  delete cart[key];
+  renderCart();
+}
+
+function changeQty(key, delta){
+  if(!cart[key]) return;
+  cart[key].qty += delta;
+  if(cart[key].qty <= 0){
+    delete cart[key];
+  }
+  renderCart();
+}
+
+function getTotalQty(){
+  return Object.values(cart).reduce((sum,item)=>sum+item.qty, 0);
+}
+
+function renderCart(){
+  const cartItems = document.getElementById('cartItems');
+  const cartCount = document.getElementById('cartCount');
+  const cartTotalQty = document.getElementById('cartTotalQty');
+  const totalQty = getTotalQty();
+
+  cartCount.textContent = totalQty;
+  cartTotalQty.textContent = totalQty;
+
+  const keys = Object.keys(cart);
+  if(keys.length === 0){
+    cartItems.innerHTML = `<div class="cart-empty"><div class="emoji">🛒</div><p>Your cart is empty.<br>Add some products to get started!</p></div>`;
+    return;
+  }
+
+  cartItems.innerHTML = '';
+  keys.forEach(key=>{
+    const item = cart[key];
+    const variantParts = [];
+    if(item.color) variantParts.push(`Colour: ${item.color}`);
+    if(item.size) variantParts.push(`Size: ${item.size}`);
+    const variantText = variantParts.join(' • ');
+
+    const row = document.createElement('div');
+    row.className = 'cart-item';
+    row.innerHTML = `
+      <img src="${item.product.img}" alt="${item.product.name}">
+      <div class="ci-info">
+        <div class="ci-name">${item.product.name}</div>
+        ${variantText ? `<div class="ci-variant">${variantText}</div>` : ''}
+        <div class="ci-controls">
+          <button class="qty-btn" data-action="dec">−</button>
+          <span class="qty-val">${item.qty}</span>
+          <button class="qty-btn" data-action="inc">+</button>
+          <button class="ci-remove">Remove</button>
+        </div>
+      </div>
+    `;
+    row.querySelector('[data-action="inc"]').onclick = ()=>changeQty(key, 1);
+    row.querySelector('[data-action="dec"]').onclick = ()=>changeQty(key, -1);
+    row.querySelector('.ci-remove').onclick = ()=>removeFromCart(key);
+    cartItems.appendChild(row);
+  });
+}
+
+/* ============ CART DRAWER ============ */
+const cartDrawer = document.getElementById('cartDrawer');
+const overlay = document.getElementById('overlay');
+document.getElementById('cartBtn').onclick = ()=>{
+  cartDrawer.classList.add('open');
+  overlay.classList.add('show');
+};
+document.getElementById('cartClose').onclick = closeCart;
+overlay.onclick = ()=>{ closeCart(); closeModal(); };
+function closeCart(){
+  cartDrawer.classList.remove('open');
+  overlay.classList.remove('show');
+}
+
+/* ============ SEARCH ============ */
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('input', (e)=>{
+  searchTerm = e.target.value;
+  renderGrid();
+});
+document.getElementById('searchToggle').onclick = ()=>{
+  const wrap = document.querySelector('.search-wrap');
+  wrap.style.display = wrap.style.display === 'flex' ? 'none' : 'flex';
+  if(wrap.style.display === 'flex') searchInput.focus();
+};
+
+/* ============ TOAST ============ */
+function showToast(msg){
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(()=>toast.classList.remove('show'), 2200);
+}
+
+/* ============ CHECKOUT MODAL ============ */
+const checkoutModal = document.getElementById('checkoutModal');
+document.getElementById('checkoutBtn').onclick = ()=>{
+  if(getTotalQty() === 0){
+    showToast('Your cart is empty — add some products first!');
+    return;
+  }
+  checkoutModal.classList.add('show');
+};
+document.getElementById('modalClose').onclick = closeModal;
+document.getElementById('modalCancel').onclick = closeModal;
+function closeModal(){ checkoutModal.classList.remove('show'); }
+
+const WHATSAPP_NUMBER = "2348089764592"; // 08089764592 in international format
+
+document.getElementById('copyAcct').onclick = (e)=>{
+  const num = document.getElementById('acctNum').textContent;
+  navigator.clipboard.writeText(num).then(()=>{
+    e.target.textContent = 'Copied!';
+    e.target.classList.add('copied');
+    setTimeout(()=>{
+      e.target.textContent = 'Copy';
+      e.target.classList.remove('copied');
+    }, 1500);
+  }).catch(()=>{
+    showToast('Account number: ' + num);
+  });
+};
+
+document.getElementById('modalSend').onclick = ()=>{
+  const name = document.getElementById('custName').value.trim();
+  const phone = document.getElementById('custPhone').value.trim();
+  const address = document.getElementById('custAddress').value.trim();
+  const note = document.getElementById('custNote').value.trim();
+  const paid = document.getElementById('paidConfirm').checked;
+
+  if(!name || !phone){
+    showToast('Please enter your name and phone number');
+    return;
+  }
+  if(!paid){
+    showToast('Please confirm payment to the Opay account before sending');
+    return;
+  }
+
+  let message = `Hello Mide's Preorder! 👋\nI'd like to place a preorder.\n\n`;
+  message += `*Name:* ${name}\n*Phone:* ${phone}\n`;
+  if(address) message += `*Address:* ${address}\n`;
+  message += `\n*Order Details:*\n`;
+
+  Object.values(cart).forEach((item,i)=>{
+    const variantParts = [];
+    if(item.color) variantParts.push(`Colour: ${item.color}`);
+    if(item.size) variantParts.push(`Size: ${item.size}`);
+    const variantText = variantParts.length ? ` (${variantParts.join(', ')})` : '';
+    message += `${i+1}. ${item.product.name}${variantText} — Qty: ${item.qty}\n`;
+  });
+
+  if(note) message += `\n*Note:* ${note}\n`;
+  message += `\n*Payment:* Sent to Opay - 08089764592 (Jacob Ayomide). I will share proof of payment in this chat.\n`;
+  message += `\nThank you!`;
+
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  window.open(url, '_blank');
+
+  closeModal();
+  closeCart();
+  // "log out" - clear cart for next customer session
+  cart = {};
+  renderCart();
+  document.getElementById('custName').value = '';
+  document.getElementById('custPhone').value = '';
+  document.getElementById('custAddress').value = '';
+  document.getElementById('custNote').value = '';
+  document.getElementById('paidConfirm').checked = false;
+  showToast('Order sent! Your cart has been cleared. 🎉');
+};
+
+/* ============ INIT ============ */
+renderGrid();
+renderCart();
+</script>
+
+</body>
+</html>
